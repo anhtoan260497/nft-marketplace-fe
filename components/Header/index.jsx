@@ -1,7 +1,7 @@
 import Link from 'next/link'
-import { ConnectButton } from 'web3uikit'
 import styles from './styles.module.scss'
 import Image from 'next/image'
+import { ConnectButton } from '@rainbow-me/rainbowkit'
 
 const Header = () => {
     return (
@@ -12,9 +12,8 @@ const Header = () => {
                     <Link href='/' >Home</Link>
                     <Link href='/sell-page' >Sell NFT</Link>
                 </div>
-
-                <ConnectButton />
             </div>
+            <ConnectButton />
 
 
         </nav>
