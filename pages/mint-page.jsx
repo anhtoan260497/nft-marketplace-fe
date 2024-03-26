@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 
 
-const mintPage = () => {
+const MintPage = () => {
 
     const { address } = useAccount()
     const [isClient, setisClient] = useState(false) // state for render run only on client
