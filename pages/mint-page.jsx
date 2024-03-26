@@ -37,5 +37,4 @@ const MintPage = () => {
 
     )
 }
-
-export default mintPage
+export default MintPage
