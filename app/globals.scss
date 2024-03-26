@@ -44,9 +44,18 @@ body {
 .wrapped-body {
   max-width: 1200px;
   margin :auto;
-  border:1px solid red;
 }
 
 .padding-top-64 {
-  padding-top: 64px;
+  height: 64px;
+  border:1px solid red;
+}
+
+
+.no-wallet {
+  width: 100%;
+  height: calc(100vh - 64px);
+  @include flex(center,center);
+  font-size: 20px;
+  font-weight: 600;
 }

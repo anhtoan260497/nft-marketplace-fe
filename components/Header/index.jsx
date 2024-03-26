@@ -1,9 +1,11 @@
 import Link from 'next/link'
 import styles from './styles.module.scss'
 import Image from 'next/image'
-import { ConnectButton } from '@rainbow-me/rainbowkit'
+import { ConnectButton, useConnectModal } from '@rainbow-me/rainbowkit'
+import { useAccount } from 'wagmi'
 
 const Header = () => {
+
     return (
         <div className={styles.headerContainerFluid}>
             <nav className={styles.headerContainer}>
@@ -15,7 +17,7 @@ const Header = () => {
                         <Link href='/mint-page'>Mint Doge NFT</Link>
                     </div>
                 </div>
-                <ConnectButton />
+                <ConnectButton className={styles.ConnectButton} />
             </nav>
         </div>
 

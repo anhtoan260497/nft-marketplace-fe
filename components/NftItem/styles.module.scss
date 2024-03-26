@@ -3,7 +3,8 @@
 .nftItemContainer {
     width: 300px;
     height: 300px;
-    border: 1px solid red;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    border-radius: 10px;
 
     @include flex(center, center, column, 10px);
 
@@ -22,3 +23,4 @@
         font-style: italic;
     }
 }
+
