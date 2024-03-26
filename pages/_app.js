@@ -1,9 +1,10 @@
 import Header from "@/components/Header"
 import Head from "next/head"
 import '@rainbow-me/rainbowkit/styles.css';
+import "../app/globals.scss";
 
 import {
-    getDefaultConfig,
+    getDefaultConfig,   
     RainbowKitProvider,
 } from '@rainbow-me/rainbowkit';
 import { WagmiProvider } from 'wagmi';
@@ -41,7 +42,7 @@ export default function App({ Component, pageProps }) {
                 <QueryClientProvider client={queryClient}>
                     <RainbowKitProvider>
                         <Header />
-                        <Component {...pageProps} />
+                        <Component {...pageProps}/>
                     </RainbowKitProvider>
                 </QueryClientProvider>
             </WagmiProvider>
