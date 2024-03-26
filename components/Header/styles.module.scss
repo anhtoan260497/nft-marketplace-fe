@@ -2,6 +2,7 @@
     width: 100%;
     position: fixed;
     height: 64px;
+    display: flex;
 
     .headerContainer {
         display: flex;
@@ -13,7 +14,7 @@
         width: 1200px;
 
         .headerNavContainer {
-            width: 60%;
+            width: 40%;
             display: flex;
             align-items: center;
 
@@ -35,6 +36,10 @@
 
                 }
             }
+        }
+
+        .connectButton {
+            border:1px solid red;
         }
     }
 }
