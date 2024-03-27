@@ -28,7 +28,7 @@ body {
     rgb(var(--background-start-rgb));
     font-family: "Open Sans", sans-serif;
     background-repeat: no-repeat;
-
+  min-height: 100vh;
 }
 
 @layer utilities {
@@ -48,7 +48,6 @@ body {
 
 .padding-top-64 {
   height: 64px;
-  border:1px solid red;
 }
 
 

@@ -1,0 +1,11 @@
+.inActive {
+    right : -500px;
+    top : 64px;
+    transition: right .8s ease;
+}
+
+.isActive {
+    right : 20px;
+    top : 64px;
+    transition : right .5s ease;
+}
