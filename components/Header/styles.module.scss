@@ -38,4 +38,68 @@
             }
         }
     }
+
+    .headerContainerMobile {
+        display: none;
+    }
+}
+
+
+@media only screen and (max-width : 990px) {
+    .headerContainerFluid {
+
+        .headerContainer {
+            display: none;
+        }
+
+        .headerContainerMobile {
+            display: block;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+
+            .logoContainer {
+                position: relative;
+                width: 100%;
+                text-align: center;
+                padding : 10px;
+            }
+
+
+
+
+            .headerNavContainer {
+                position: fixed;
+                border: 1px solid red;
+                width: 300px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 20px;
+                background-color: rgb(241, 243, 243);
+                min-height: 100%;
+                right: -300px;
+                z-index: 100;
+                transition: right .3s ease;
+
+
+
+
+
+                .headerNav {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 20px;
+                    margin-top: 30px;
+                }
+            }
+
+            .activeHeaderNav {
+                right: 0;
+                transition: right .3s ease;
+            }
+        }
+    }
 }

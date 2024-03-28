@@ -1,10 +1,10 @@
 .buttonContainer {
-    width: 500px;
+    width: 100%;
     text-align: center;
 
 
     .mintButton {
-        width: 60%;
+        width: 20%;
         align-items: center;
         appearance: none;
         background-image: radial-gradient(100% 100% at 100% 0, #5adaff 0, #5468ff 100%);
@@ -48,4 +48,24 @@
             transform: translateY(2px);
         }
     }
+}
+
+@media only screen and (max-width : 990px) {
+    .buttonContainer {
+
+        .mintButton {
+            width: 30%;
+        }
+    }
+
+}
+
+@media only screen and (max-width : 767px) {
+    .buttonContainer {
+
+        .mintButton {
+            width: 50%;
+        }
+    }
+
 }
