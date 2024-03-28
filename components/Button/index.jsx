@@ -33,7 +33,7 @@ function Button({ }) {
             setMintStatus({
                 ...mintStatus, isActive: false
             })
-        },5000)
+        }, 5000)
         return () => {
             clearTimeout(hidePopup)
         }
@@ -47,7 +47,7 @@ function Button({ }) {
                 hash: txn,
                 confirmations: 1,
                 chainId,
-            })
+            })  
             setMintStatus({
                 type: transactionReceipt.status,
                 message: transactionReceipt.status === 'success' ? `Mint Succesfull with hash ${shortTxnHash(txn)}` : `Mint Error hash ${shortTxnHash()}`,

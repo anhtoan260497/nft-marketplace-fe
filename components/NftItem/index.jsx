@@ -44,7 +44,7 @@ function NftItem(props) {
     return (
         <div className={styles.nftItemContainer}>
             <p className={styles.nftName} >{nftData[nftIndex].name}</p>
-            <Image className={styles.nftImage} src={nftData[nftIndex].image} width={200} height={200} alt="Pug" />
+            <Image className={styles.nftImage} src={nftData[nftIndex].image} width={200} height={200} alt="Doge" />
             <p className={styles.nftDescription}>{nftData[nftIndex].description}</p>
         </div>
     );
