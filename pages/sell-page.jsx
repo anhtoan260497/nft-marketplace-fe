@@ -27,11 +27,11 @@ const SellPage = () => {
             setNfts(response.raw.result)
         }
         getNfts()
-    }, [])
+    }, [chainId, address])
 
 
     const renderNftList = () => {
-        return nfts.map(item => <NftItem isNormalPage nftItem={item} />)
+        return nfts.map(item => <NftItem isNormalPage nftItem={item} key={item.token_id} />)
     }
 
 

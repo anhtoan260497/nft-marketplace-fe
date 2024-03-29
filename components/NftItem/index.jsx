@@ -12,7 +12,7 @@ import styles from './styles.module.scss'
 function NftItem({ nftItems, nftItem, isMintPage, isNormalPage }) {
 
     const [nftIndex, setNftIndex] = useState(0)
-    const metaData = nftItem?.metadata && useMemo(() => convertMetaData(nftItem.metadata), [nftItem.metadata])
+    const metaData = nftItem?.metadata && convertMetaData(nftItem.metadata)
     const { address } = useAccount()
     const isClient = useRenderClient()
     const dispatch = useDispatch()
@@ -32,7 +32,7 @@ function NftItem({ nftItems, nftItem, isMintPage, isNormalPage }) {
         return () => {
             clearInterval(intervalImage)
         }
-    }, [])
+    }, [isMintPage])
 
     const checkWhoOwned = () => {
         if (!isNormalPage || !address || !isClient) return
