@@ -40,8 +40,10 @@ function Button() {
         } catch (err) {
             console.error(err)
             dispatch(setToast({
-                ...mintStatus,
-                isActive: false
+                ...toastStatus,
+                type: 'error',
+                message : 'Mint Error',
+                isActive: true
             }))
             setIsMinting(false)
         }

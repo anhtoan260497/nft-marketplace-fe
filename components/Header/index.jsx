@@ -15,7 +15,7 @@ const Header = () => {
     return (
         <div className={styles.headerContainerFluid}>
             <nav className={styles.headerContainer}>
-                <Image className={styles.logo} src='https://storage.googleapis.com/opensea-static/Logos/OpenSea-Full-Logo%20(dark).svg' width={200} height={50} />
+                <Image className={styles.logo} src='https://storage.googleapis.com/opensea-static/Logos/OpenSea-Full-Logo%20(dark).svg' width={200} height={50} alt='logo' />
                 <div className={styles.headerNavContainer}>
                     <div className={styles.headerNav}>
                         <Link href='/' >Home</Link>
@@ -27,7 +27,7 @@ const Header = () => {
             </nav>
             <nav className={styles.headerContainerMobile}>
                 <div className={styles.logoContainer}>
-                    <Image className={styles.logo} src='https://storage.googleapis.com/opensea-static/Logos/OpenSea-Full-Logo%20(dark).svg' width={200} height={50} />
+                    <Image className={styles.logo} src='https://storage.googleapis.com/opensea-static/Logos/OpenSea-Full-Logo%20(dark).svg' width={200} height={50} alt='logo'/>
                     <FontAwesomeIcon style={{ width: '20px', position: "absolute", right: '10px', top: '10%', margin: "20px" }} icon={faBars} onClick={() => { setIsActiveNav(true) }} />
                 </div>
                 <div className={clsx(styles.headerNavContainer, isActiveNav && styles.activeHeaderNav)}>

@@ -103,12 +103,12 @@ function ModalCustom() {
                     <h3 className="text-center font-bold text-3xl my-3">Sell NFT</h3>
                     <div className="space-y-6">
                         <div className={styles.inputField}>
-                            <p className={styles.inputFieldLabel}>NFT's Address</p>
+                            <p className={styles.inputFieldLabel}>{`NFT's Address`}</p>
                             <input placeholder={selectedNft.address} disabled />
                         </div>
 
                         <div className={styles.inputField}>
-                            <p className={styles.inputFieldLabel}>NFT's token ID</p>
+                            <p className={styles.inputFieldLabel}>{`NFT's TokenId`}</p>
                             <input placeholder={selectedNft.tokenId} disabled />
                         </div>
 
