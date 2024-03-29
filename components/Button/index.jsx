@@ -1,43 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import styles from './styles.module.scss'
-import clsx from 'clsx'
-import Loader from '../Loader';
-import basicNftABI from '@/contracts/basicNft.json';
-import { useChainId, useWriteContract } from 'wagmi';
-import { waitForTransactionReceipt } from '@wagmi/core';
 import config from '@/config-wagmi';
-import Toast from '../Toast';
+import { mintNftConfig } from '@/constants';
+import { setToast } from '@/features/toastSlice';
 import { shortTxnHash } from '@/helper';
+import { waitForTransactionReceipt } from '@wagmi/core';
+import clsx from 'clsx';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useChainId, useWriteContract } from 'wagmi';
+import Loader from '../Loader';
+import Toast from '../Toast';
+import styles from './styles.module.scss';
 
-Button.propTypes = {
-
-};
-
-function Button({ }) {
+function Button() {
 
     const [isMinting, setIsMinting] = useState(false)
-    const [mintStatus, setMintStatus] = useState({ type: '', message: '', isActive: false })
     const chainId = useChainId()
+    const dispatch = useDispatch()
+    const toastStatus =  useSelector(state => state.toastReducer)
 
     const { writeContractAsync } = useWriteContract()
-    const mintNftConfig = {
-        abi: basicNftABI.abi,
-        address: basicNftABI.address,
-        functionName: 'mintNft',
-        args: [],
-    }
-
-    useEffect(() => {
-        if (!mintStatus.isActive) return
-        const hidePopup = setTimeout(() => {
-            setMintStatus({
-                ...mintStatus, isActive: false
-            })
-        }, 5000)
-        return () => {
-            clearTimeout(hidePopup)
-        }
-    }, [mintStatus])
 
     const mintNft = async () => {
         try {
@@ -47,25 +28,31 @@ function Button({ }) {
                 hash: txn,
                 confirmations: 1,
                 chainId,
-            })  
-            setMintStatus({
+            })
+
+            dispatch(setToast({
                 type: transactionReceipt.status,
                 message: transactionReceipt.status === 'success' ? `Mint Succesfull with hash ${shortTxnHash(txn)}` : `Mint Error hash ${shortTxnHash()}`,
                 isActive: true
-            })
+            }))
+
             setIsMinting(false)
         } catch (err) {
             console.error(err)
-            setIsMintError(true)
+            dispatch(setToast({
+                ...mintStatus,
+                isActive: false
+            }))
+            setIsMinting(false)
         }
     }
 
     return (
         <div className={clsx(styles.buttonContainer, 'mt-3')}>
-            <button className={clsx(styles.mintButton)} onClick={mintNft}>
-                {isMinting && !mintStatus.isActive ? <Loader /> : 'Mint'}
+            <button className={clsx(styles.mintButton)} onClick={mintNft} disabled={toastStatus.isActive}>
+                {isMinting && !toastStatus.isActive ? <Loader /> : 'Mint'}
             </button>
-            <Toast type={mintStatus.type} message={mintStatus.message} isActive={mintStatus.isActive} />
+            <Toast />
         </div>
     );
 }

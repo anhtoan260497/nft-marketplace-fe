@@ -1,32 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import styles from './styles.module.scss'
+import { setIsOpenModal, setSelectedNft } from '@/features/modalSlice';
+import { convertMetaData, shortTxnHash } from '@/helper';
+import useRenderClient from '@/hooks/useRenderClient';
+import clsx from 'clsx';
 import Image from 'next/image';
+import { useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useAccount } from 'wagmi';
+import styles from './styles.module.scss'
 
-NftItem.propTypes = {
 
-};
-
-function NftItem(props) {
-
-    const nftData = [{
-        name: 'PUG',
-        image: 'https://orange-historic-reptile-492.mypinata.cloud/ipfs/QmZ4uHLzh35ufjFHHNbc7vAjuWmL7MWTKeARVzKsZoaJjY',
-        description: 'Adorable Pug'
-    }, {
-        name: 'Shiba',
-        image: 'https://orange-historic-reptile-492.mypinata.cloud/ipfs/QmdotT4u4Yq9UcgiWLZqoLPPnyn774Hsc2fqJtn6gWqHrw',
-        description: 'Shiba Inu Awesome'
-    }, {
-        name: 'St.Benard',
-        image: 'https://orange-historic-reptile-492.mypinata.cloud/ipfs/QmeaE4MTmQaomEXffrKKE2PaVZFuaT34DxVYyVn6xL7BsW',
-        description: 'St Bernard go ahead'
-    }]
-
+function NftItem({ nftItems, nftItem, isMintPage, isNormalPage }) {
 
     const [nftIndex, setNftIndex] = useState(0)
+    const metaData = nftItem?.metadata && useMemo(() => convertMetaData(nftItem.metadata), [nftItem.metadata])
+    const { address } = useAccount()
+    const isClient = useRenderClient()
+    const dispatch = useDispatch()
+    const isOpenModal = useSelector(state => state.modalReducer.isOpenModal)
 
     useEffect(() => {
+        if (!isMintPage) return
         let index = 0
         const intervalImage = setInterval(() => {
             if (index === 2) {
@@ -41,11 +34,34 @@ function NftItem(props) {
         }
     }, [])
 
+    const checkWhoOwned = () => {
+        if (!isNormalPage || !address || !isClient) return
+        if (address.toLowerCase() === nftItem.owner_of) {
+            return `Owned by you`
+        }
+        return `Owned by ${shortTxnHash(nftItem.owner_of)}`
+    }
+
+    const handleClickNftItem = () => {
+      dispatch(setIsOpenModal(!isOpenModal))
+      dispatch(setSelectedNft({
+        address : nftItem.token_address,
+        tokenId : nftItem.token_id
+      }))
+    }
+
+
     return (
-        <div className={styles.nftItemContainer}>
-            <p className={styles.nftName} >{nftData[nftIndex].name}</p>
-            <Image className={styles.nftImage} src={nftData[nftIndex].image} width={200} height={200} alt="Doge" />
-            <p className={styles.nftDescription}>{nftData[nftIndex].description}</p>
+        <div className={clsx(styles.nftItemContainer, isNormalPage && styles.responsiveNormalPage )} style={
+            isNormalPage && { cursor: 'pointer' }
+        } onClick={handleClickNftItem} >
+            {isNormalPage && <div className={clsx(styles.nftHeadInfo, 'flex', 'justify-between')}>
+                {checkWhoOwned()}
+                <p title={nftItem.owner_of}>{`#${nftItem.token_id}`}</p>
+            </div>}
+            <p className={styles.nftName} >{isMintPage ? nftItems[nftIndex].name : metaData.name}</p>
+            <Image className={styles.nftImage} src={isMintPage ? nftItems[nftIndex].image : metaData.image} width={200} height={200} alt="Doge"  priority/>
+            <p className={styles.nftDescription}>{isMintPage ? nftItems[nftIndex].description : metaData.description}</p>
         </div>
     );
 }

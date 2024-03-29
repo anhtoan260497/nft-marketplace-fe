@@ -6,7 +6,6 @@ import config from "@/config-wagmi";
 
 
 import {
-    getDefaultConfig,
     RainbowKitProvider,
 } from '@rainbow-me/rainbowkit';
 import { WagmiProvider } from 'wagmi';
@@ -14,8 +13,9 @@ import {
     QueryClientProvider,
     QueryClient,
 } from "@tanstack/react-query";
-import { useEffect } from "react";
-import Moralis from "moralis";
+import useMoralisStart from "@/hooks/useMoralisStart";
+import { Provider } from "react-redux";
+import { store } from "@/app/store/store";
 
 
 const queryClient = new QueryClient();
@@ -24,14 +24,8 @@ const queryClient = new QueryClient();
 
 export default function App({ Component, pageProps }) {
 
-    useEffect(() => {
-        const connectMoralis = async () => {
-            await Moralis.start({
-                apiKey: process.env.NEXT_PUBLIC_MORALIS_API_KEY,
-            });
-        }
-        connectMoralis()
-    },[])
+
+    // useMoralisStart();
 
     return (
         <>
@@ -39,14 +33,16 @@ export default function App({ Component, pageProps }) {
                 <title>NFT Marketplace</title>
                 <link rel="icon" href="https://styles.redditmedia.com/t5_9vkrm/styles/communityIcon_dy4kuclo24gb1.png"></link>
             </Head>
-            <WagmiProvider config={config}>
-                <QueryClientProvider client={queryClient}>
-                    <RainbowKitProvider>
-                        <Header />
-                        <Component {...pageProps} />
-                    </RainbowKitProvider>
-                </QueryClientProvider>
-            </WagmiProvider>
+            <Provider store={store}>
+                <WagmiProvider config={config}>
+                    <QueryClientProvider client={queryClient}>
+                        <RainbowKitProvider>
+                            <Header />
+                            <Component {...pageProps} />
+                        </RainbowKitProvider>
+                    </QueryClientProvider>
+                </WagmiProvider>
+            </Provider>
         </>
     )
 }
