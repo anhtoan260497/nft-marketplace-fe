@@ -2,10 +2,12 @@
     right : -500px;
     top : 64px;
     transition: right .8s ease;
+    z-index: 1000;
 }
 
 .isActive {
     right : 20px;
     top : 64px;
     transition : right .5s ease;
+    z-index: 1000;
 }

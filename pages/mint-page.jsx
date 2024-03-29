@@ -1,6 +1,7 @@
 import Button from "@/components/Button";
 import NftItem from "@/components/NftItem";
 import Toast from "@/components/Toast";
+import useRenderClient from "@/hooks/useRenderClient";
 import React, { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 
@@ -8,12 +9,21 @@ import { useAccount } from "wagmi";
 const MintPage = () => {
 
     const { address } = useAccount()
-    const [isClient, setisClient] = useState(false) // state for render run only on client
+   const isClient =  useRenderClient()
 
-
-    useEffect(() => {
-        setisClient(true)
-    }, []) // useEffect for render only on client
+    const nftData = [{
+        name: 'Pug',
+        image: 'https://orange-historic-reptile-492.mypinata.cloud/ipfs/QmZ4uHLzh35ufjFHHNbc7vAjuWmL7MWTKeARVzKsZoaJjY',
+        description: 'Adorable Pug'
+    }, {
+        name: 'Shiba',
+        image: 'https://orange-historic-reptile-492.mypinata.cloud/ipfs/QmdotT4u4Yq9UcgiWLZqoLPPnyn774Hsc2fqJtn6gWqHrw',
+        description: 'Shiba Inu Awesome'
+    }, {
+        name: 'St.Benard',
+        image: 'https://orange-historic-reptile-492.mypinata.cloud/ipfs/QmeaE4MTmQaomEXffrKKE2PaVZFuaT34DxVYyVn6xL7BsW',
+        description: 'St.Bernard go ahead'
+    }]
 
     return (
         <div>
@@ -24,7 +34,7 @@ const MintPage = () => {
                         <div className="mt-6 w-full">
                             <p className="text-center font-bold text-3xl my-6">Mint NFT</p>
                             <div className="w-full flex flex-col items-center">
-                                <NftItem />
+                                <NftItem nftItems={nftData} isMintPage />
                                 <Button address={address} />
                             </div>
 
