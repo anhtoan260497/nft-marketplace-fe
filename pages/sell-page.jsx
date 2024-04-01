@@ -14,6 +14,8 @@ const SellPage = () => {
     useMoralisStart();
     const isClient = useRenderClient()
 
+console.log(parseInt('0x0de0b6b3a7640000') / 10 ** 18)
+
     useEffect(() => {
         const getNfts = async () => {
             if (!address) return []
