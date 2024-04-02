@@ -36,3 +36,10 @@ export const listNftConfig = {
     functionName: 'listItem',
     args: [],
 }
+
+
+// React Query Keys
+
+export const QUERY_KEY = {
+    GET_LISTED_ITEMS : 'GET_LISTED_ITEMS',
+}

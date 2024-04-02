@@ -5,18 +5,20 @@ import useMoralisStart from "@/hooks/useMoralisStart";
 import useRenderClient from "@/hooks/useRenderClient";
 import Moralis from "moralis";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useAccount, useChainId } from "wagmi";
 
 const SellPage = () => {
+    useMoralisStart();
+    const moralisStart = useSelector(state => state.moralisReducer.isStarted)
     const [nfts, setNfts] = useState([])
     const chainId = useChainId()
     const { address } = useAccount()
-    useMoralisStart();
     const isClient = useRenderClient()
 
     useEffect(() => {
         const getNfts = async () => {
-            if (!address) return []
+            if (!address || moralisStart) return []
             const response = await Moralis.EvmApi.nft.getWalletNFTs({
                 "chain": chainId,
                 "format": "decimal",
@@ -27,7 +29,8 @@ const SellPage = () => {
             setNfts(response.raw.result)
         }
         getNfts()
-    }, [chainId, address])
+    }, [chainId, address, moralisStart])
+    console.log(nfts)
 
 
     const renderNftList = () => {

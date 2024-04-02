@@ -9,7 +9,7 @@ import { useAccount } from "wagmi";
 const MintPage = () => {
 
     const { address } = useAccount()
-   const isClient =  useRenderClient()
+    const isClient = useRenderClient()
 
     const nftData = [{
         name: 'Pug',
@@ -24,6 +24,7 @@ const MintPage = () => {
         image: 'https://orange-historic-reptile-492.mypinata.cloud/ipfs/QmeaE4MTmQaomEXffrKKE2PaVZFuaT34DxVYyVn6xL7BsW',
         description: 'St.Bernard go ahead'
     }]
+    
 
     return (
         <div>

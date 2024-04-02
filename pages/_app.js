@@ -24,9 +24,6 @@ const queryClient = new QueryClient();
 
 export default function App({ Component, pageProps }) {
 
-
-    // useMoralisStart();
-
     return (
         <>
             <Head>
