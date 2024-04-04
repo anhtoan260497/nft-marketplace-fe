@@ -147,11 +147,11 @@ function ModalCustom() {
                     <div className={styles.buyNftContainer}>
                         <div className={styles.buyNftInfo}>
                             <div className={styles.buyNftInfoItem}>
-                                <p>NFT's Name</p>
+                                <p>NFTs Name</p>
                                 <input placeholder={`${selectedNft.metaData?.name} #${selectedNft.tokenId}`} disabled />
                             </div>
                             <div className={styles.buyNftInfoItem}>
-                                <p>NFT's Address</p>
+                                <p>NFTs Address</p>
                                 <input placeholder={selectedNft.address} disabled />
                             </div>
                         </div>
