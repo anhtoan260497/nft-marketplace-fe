@@ -18,7 +18,7 @@ const SellPage = () => {
 
     useEffect(() => {
         const getNfts = async () => {
-            if (!address || moralisStart) return []
+            if (!address || !moralisStart) return []
             const response = await Moralis.EvmApi.nft.getWalletNFTs({
                 "chain": chainId,
                 "format": "decimal",
@@ -30,7 +30,6 @@ const SellPage = () => {
         }
         getNfts()
     }, [chainId, address, moralisStart])
-    console.log(nfts)
 
 
     const renderNftList = () => {
@@ -41,11 +40,11 @@ const SellPage = () => {
     return <div className="wrapped-body">
         <div className="padding-top-64"></div>
         <Toast />
-        <p className="text-center font-bold text-3xl my-8">Recently Listed</p>
+        <p className="text-center font-bold text-3xl my-8">Your NFTs</p>
         {address && isClient ? <div className='p-5 flex justify-center flex-wrap gap-8'>
             {renderNftList()}
             <ModalCustom />
-        </div> : <div className='no-wallet' style={{ alignItems: 'flex-start' }}>Please connect your wallet first to mint</div>}
+        </div> : <div className='no-wallet' style={{ alignItems: 'flex-start' }}>Please connect your wallet first to see your NFTs</div>}
 
     </div>
 }

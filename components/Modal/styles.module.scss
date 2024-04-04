@@ -1,3 +1,5 @@
+@import '@/app/mixins.scss';
+
 .inputField {
     width: 100%;
 
@@ -22,11 +24,62 @@
     }
 }
 
+.buyNftContainer {
+    @include flex(space-between, center);
+    padding : 10px;
+
+    .buyNftInfo {
+        width: 60%;
+        @include flex(flex-start, flex-start, column,20px);
+        .buyNftInfoItem {
+            font-size: 14px;
+            font-weight: 600;
+            width: 100%;
+
+            p {
+                font-weight: 600;
+                margin : 10px 0;
+            }
+
+            input {
+                width: 100%;
+                padding : 10px 5px;
+                background-color: #f4f4f4;
+                border-radius: 10px;
+                text-overflow: ellipsis;
+                
+            }
+        }
+    }
+
+    .buyNftImage {
+        width : 40%;
+        font-weight: 700;
+        @include flex(flex, flex, column, 10px);
+
+        img {
+            width: 200px;
+            height: 200px;
+            object-fit: contain;
+        }
+    }
+}
+
+.buyNftFooter {
+    @include flex(space-between, center);
+    width: 100%;
+
+    .buyNftFooterOptions {
+        @include flex(center,center,row, 10px);
+    }
+
+    .currentBalance {
+        font-size: 14px;
+    }
+}
+
 @media only screen and (max-width : 767px) {
     .modalContainer {
-    margin-top : 60px;
+        margin-top: 60px;
+    }
 }
-}
-
-
-
