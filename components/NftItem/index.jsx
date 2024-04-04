@@ -3,20 +3,20 @@ import { convertMetaData, shortTxnHash } from '@/helper';
 import useRenderClient from '@/hooks/useRenderClient';
 import clsx from 'clsx';
 import Image from 'next/image';
-import { useEffect, useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useAccount } from 'wagmi';
-import styles from './styles.module.scss'
+import styles from './styles.module.scss';
 
 
-function NftItem({ nftItems, nftItem, isMintPage, isNormalPage }) {
+function NftItem({ nftItems, nftItem, isMintPage, isNormalPage, isListedPage }) {
 
     const [nftIndex, setNftIndex] = useState(0)
     const metaData = nftItem?.metadata && convertMetaData(nftItem.metadata)
     const { address } = useAccount()
     const isClient = useRenderClient()
     const dispatch = useDispatch()
-    const isOpenModal = useSelector(state => state.modalReducer.isOpenModal)
+    const [isHover, setIsHover] = useState(false)
 
     useEffect(() => {
         if (!isMintPage) return
@@ -35,33 +35,59 @@ function NftItem({ nftItems, nftItem, isMintPage, isNormalPage }) {
     }, [isMintPage])
 
     const checkWhoOwned = () => {
-        if (!isNormalPage || !address || !isClient) return
-        if (address.toLowerCase() === nftItem.owner_of) {
-            return `Owned by you`
+        if (!isClient) return
+        if (address?.toLowerCase() === nftItem.owner_of) {
+            return <p className='font-medium'>Owned by you</p>
         }
-        return `Owned by ${shortTxnHash(nftItem.owner_of)}`
+        return <p className='font-medium'>Owned by {shortTxnHash(nftItem.owner_of)}</p>
     }
 
     const handleClickNftItem = () => {
-      dispatch(setIsOpenModal(!isOpenModal))
-      dispatch(setSelectedNft({
-        address : nftItem.token_address,
-        tokenId : nftItem.token_id
-      }))
+        if(isListedPage) return
+        dispatch(setIsOpenModal({
+            isActive: true,
+            type: 'list'
+        }))
+        dispatch(setSelectedNft({
+            address: nftItem.token_address,
+            tokenId: nftItem.token_id
+        }))
     }
 
+    const handleClickBuyButton = () => {
+        dispatch(setIsOpenModal({
+            isActive: true,
+            type: 'buy',
+        }))
+
+        dispatch(setSelectedNft({
+            address: nftItem.token_address,
+            tokenId: nftItem.token_id,
+            metaData : nftItem.normalized_metadata,
+            priceFormat : nftItem.priceFormat,
+            price : nftItem.price,
+            owner : nftItem.owner_of     
+        }))
+
+    }
 
     return (
-        <div className={clsx(styles.nftItemContainer, isNormalPage && styles.responsiveNormalPage )} style={
-            isNormalPage && { cursor: 'pointer' }
-        } onClick={handleClickNftItem} >
-            {isNormalPage && <div className={clsx(styles.nftHeadInfo, 'flex', 'justify-between')}>
+        <div className={clsx(styles.nftItemContainer, (isNormalPage || isListedPage) && styles.responsiveNormalPage)} style={
+            (isNormalPage || isListedPage) && { cursor: 'pointer' }
+        } onClick={handleClickNftItem} onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)}>
+            {(isNormalPage || isListedPage) && <div className={clsx(styles.nftHeadInfo, 'flex', 'justify-between')}>
                 {checkWhoOwned()}
                 <p title={nftItem.owner_of}>{`#${nftItem.token_id}`}</p>
             </div>}
-            <p className={styles.nftName} >{isMintPage ? nftItems[nftIndex].name : metaData.name}</p>
-            <Image className={styles.nftImage} src={isMintPage ? nftItems[nftIndex].image : metaData.image} width={200} height={200} alt="Doge"  priority/>
-            <p className={styles.nftDescription}>{isMintPage ? nftItems[nftIndex].description : metaData.description}</p>
+            <p className={styles.nftName} >{isMintPage ? nftItems[nftIndex].name : metaData?.name}</p>
+            <Image className={styles.nftImage} src={isMintPage ? nftItems[nftIndex].image : metaData?.image} width={200} height={200} alt="Doge" priority />
+            <p className={styles.nftDescription}>{isMintPage ? nftItems[nftIndex].description : metaData?.description}</p>
+            {nftItem?.price && <p className={styles.nftPrice}>{nftItem?.priceFormat} ETH</p>}
+            {nftItem?.price && <div className={clsx(styles.nftOptions, isHover && styles.nftOptionsActive)} onClick={handleClickBuyButton}>
+                <p className={styles.nftOptionsBuynow}>Buy now</p>
+                <div className={styles.nftOptionsGap}></div>
+                <p className={styles.nftOptionsPrice}>{nftItem.priceFormat} ETH</p>
+            </div>}
         </div>
     );
 }

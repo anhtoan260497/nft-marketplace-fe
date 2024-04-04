@@ -1,26 +1,30 @@
-import Header from "@/components/Header"
-import Head from "next/head"
-import Moralis from "moralis"
-import React, { useEffect, useState } from "react"
-import { useEvmNativeBalance } from "@moralisweb3/next"
-import useGetListedItems from "@/hooks/useGetListedItems"
+import ModalCustom from "@/components/Modal"
 import NftItem from "@/components/NftItem"
-import useNftInfo from "@/hooks/useNftInfo"
+import { convertMetaData } from "@/helper"
 import useMoralisStart from "@/hooks/useMoralisStart"
+import useNftInfo from "@/hooks/useNftInfo"
+import { useState } from "react"
 
 
 const HomePage = ({ listedItems }) => {
 
     useMoralisStart()
+    const listedItemsInfo = useNftInfo(listedItems)
 
-    const a = useNftInfo(listedItems)
+    console.log(listedItemsInfo)
+
+    const renderNftList = () => {
+        console.log(listedItemsInfo)
+        return listedItemsInfo.map(item => <NftItem nftItem={item} isListedPage key={item._id} />)
+    }
 
     return (
         <div className="wrapped-body">
             <div className="padding-top-64"></div>
-            <div className="border-red w-full">
-                {/* <NftItem /> */}
+            <div className=" w-full p-5 flex justify-center flex-wrap gap-8">
+                {renderNftList()}
             </div>
+            <ModalCustom />
         </div>
     )
 

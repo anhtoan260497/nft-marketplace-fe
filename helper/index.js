@@ -2,6 +2,11 @@ export const shortTxnHash = (hash) => {
     return `${hash.slice(0,4)}...${hash.slice(hash.length-4, hash.length)}`
 }
 
+export const shortPrice = (price) => {
+    const number = parseFloat(price)
+    return number.toFixed(3)
+}
+
 export const convertMetaData = (metadataString) => {
    return JSON.parse(metadataString)
 }
