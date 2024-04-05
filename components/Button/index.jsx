@@ -1,7 +1,7 @@
 import config from '@/config-wagmi';
 import { mintNftConfig } from '@/constants';
 import { setToast } from '@/features/toastSlice';
-import { shortTxnHash } from '@/helper';
+import { scanExplorerUrl, shortTxnHash } from '@/helper';
 import { waitForTransactionReceipt } from '@wagmi/core';
 import clsx from 'clsx';
 import { useState } from 'react';
@@ -16,7 +16,7 @@ function Button() {
     const [isMinting, setIsMinting] = useState(false)
     const chainId = useChainId()
     const dispatch = useDispatch()
-    const toastStatus =  useSelector(state => state.toastReducer)
+    const toastStatus = useSelector(state => state.toastReducer)
 
     const { writeContractAsync } = useWriteContract()
 
@@ -29,10 +29,9 @@ function Button() {
                 confirmations: 1,
                 chainId,
             })
-
             dispatch(setToast({
                 type: transactionReceipt.status,
-                message: transactionReceipt.status === 'success' ? `Mint Succesfull with hash ${shortTxnHash(txn)}` : `Mint Error hash ${shortTxnHash()}`,
+                message: transactionReceipt.status === 'success' ? <p>Mint successfully with hash <a className='link-color' href={scanExplorerUrl(chainId, txn)} target='_blank'>{shortTxnHash(txn)}</a></p> : <p>Minted error at hash <a className='link-color' href={scanExplorerUrl(chainId, txn)} target='_blank'>{shortTxnHash(txn)}</a></p>,
                 isActive: true
             }))
 
@@ -42,12 +41,14 @@ function Button() {
             dispatch(setToast({
                 ...toastStatus,
                 type: 'error',
-                message : 'Mint Error',
+                message: 'Mint Error',
                 isActive: true
             }))
             setIsMinting(false)
         }
     }
+
+
 
     return (
         <div className={clsx(styles.buttonContainer, 'mt-3')}>

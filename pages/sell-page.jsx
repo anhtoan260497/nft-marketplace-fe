@@ -25,7 +25,6 @@ const SellPage = () => {
                 "mediaItems": false,
                 address
             });
-
             setNfts(response.raw.result)
         }
         getNfts()

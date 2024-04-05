@@ -11,10 +11,7 @@ const HomePage = ({ listedItems }) => {
     useMoralisStart()
     const listedItemsInfo = useNftInfo(listedItems)
 
-    console.log(listedItemsInfo)
-
     const renderNftList = () => {
-        console.log(listedItemsInfo)
         return listedItemsInfo.map(item => <NftItem nftItem={item} isListedPage key={item._id} />)
     }
 
