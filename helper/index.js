@@ -3,6 +3,7 @@ export const shortTxnHash = (hash) => {
 }
 
 export const shortPrice = (price) => {
+    if(!price) return 0
     const number = parseFloat(price)
     return number.toFixed(3)
 }
@@ -21,4 +22,8 @@ export const getErrorMessageFromSolidity = (message) => {
 
 export const parsePriceToEther = (price) => {
     return price * 10 ** 18
+}
+
+export const scanExplorerUrl = (chainId, hash) => {
+    if(chainId === 11155111) return `https://sepolia.etherscan.io/tx/${hash}`
 }

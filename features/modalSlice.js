@@ -17,7 +17,6 @@ const modalSlice = createSlice({
         setIsOpenModal : (state, action) => {
             state.isOpenModal = action.payload.isActive
             state.type = action.payload.type
-         console.log(state.type)
         },
         setSelectedNft (state,action ){
             state.selectedNft = action.payload

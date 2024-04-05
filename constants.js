@@ -37,6 +37,12 @@ export const listNftConfig = {
     args: [],
 }
 
+export const buyNftConfig = {
+    abi : nftMarketplace.abi,
+    address : nftMarketplace.address,
+    functionName : 'buyItem',
+    args : []
+}
 
 // React Query Keys
 

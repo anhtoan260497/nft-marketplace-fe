@@ -57,3 +57,11 @@ body {
 .border-red {
   border:1px solid red;
 }
+
+.link-color {
+  color : rgb(146, 44, 44);
+  &:hover{
+    text-decoration: underline;
+
+  }
+}

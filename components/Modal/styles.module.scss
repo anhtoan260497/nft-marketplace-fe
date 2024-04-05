@@ -65,6 +65,8 @@
     }
 }
 
+
+
 .buyNftFooter {
     @include flex(space-between, center);
     width: 100%;
@@ -75,6 +77,14 @@
 
     .currentBalance {
         font-size: 14px;
+    }
+
+    .connectButton {
+        background-color: #0E76FD;
+        padding : 8px 10px;
+        border-radius : 5px;
+        color : white;
+        font-weight: 600;
     }
 }
 

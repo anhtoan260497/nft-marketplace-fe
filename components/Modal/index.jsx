@@ -2,11 +2,11 @@
 
 
 import config from "@/config-wagmi";
-import { approveNftConfig, getApproveConfig, listNftConfig } from '@/constants';
+import { approveNftConfig, getApproveConfig, listNftConfig, buyNftConfig } from '@/constants';
 import nftMarketplaceABI from '@/contracts/nftMarketplace.json';
 import { setIsOpenModal, setSelectedNft } from "@/features/modalSlice";
 import { setToast } from "@/features/toastSlice";
-import { getErrorMessageFromSolidity, parsePriceToEther, shortPrice, shortTxnHash } from "@/helper";
+import { getErrorMessageFromSolidity, parsePriceToEther, scanExplorerUrl, shortPrice, shortTxnHash } from "@/helper";
 import { waitForTransactionReceipt } from "@wagmi/core";
 import { Button, Modal } from "flowbite-react";
 import { useState } from "react";
@@ -33,9 +33,7 @@ function ModalCustom() {
     const toastStatus = useSelector(state => state.toastReducer)
     const { data: approves } = useReadContract(getApproveConfig(selectedNft.tokenId, chainId))
     const { address } = useAccount()
-    const { data: balance } = useBalance({address})
-
-
+    const { data: balance } = useBalance({ address })
 
     // methods
     const handleIsOpenModal = () => {
@@ -63,7 +61,7 @@ function ModalCustom() {
                     confirmations: 1,
                     chainId,
                 })
-                4
+
 
                 dispatch(setToast({
                     type: 'success',
@@ -88,7 +86,7 @@ function ModalCustom() {
             }))
             dispatch(setToast({
                 type: 'success',
-                message: `Listed Successfully with hash ${shortTxnHash(txn)}`,
+                message: <p>Listed successfully with hash <a className='link-color' href={scanExplorerUrl(chainId, txn)} target='_blank'>{shortTxnHash(txn)}</a></p>,
                 isActive: true
             }))
             setIsListing(false)
@@ -107,7 +105,36 @@ function ModalCustom() {
 
     const handleBuyItem = async () => {
         setIsBuying(true)
+        try {
+            const txn = await writeContractAsync({
+                ...buyNftConfig,
+                args: [selectedNft.address, selectedNft.tokenId],
+                value: selectedNft.price
+            })
 
+            await waitForTransactionReceipt(config, {
+                hash: txn,
+                confirmations: 1,
+                chainId,
+            })
+            dispatch(setToast({
+                type: 'success',
+                message: <p>Bought successfully with hash <a href={scanExplorerUrl(chainId, txn)}>{shortTxnHash(txn)}</a></p>,
+                isActive: true
+            }))
+            setIsBuying(false)
+            dispatch(setIsOpenModal({
+                isActive: false,
+                type : ''
+            }))
+        } catch (err) {
+            dispatch(setToast({
+                type: 'error',
+                message: getErrorMessageFromSolidity(err.message),
+                isActive: true
+            }))
+            setIsBuying(false)
+        }
     }
 
     // JSX
@@ -160,19 +187,19 @@ function ModalCustom() {
                             <p className={clsx('text-center')}>{selectedNft.priceFormat} ETH</p>
                         </div>
                     </div>
-                    {balance?.value <selectedNft.price && <p className="mt-4 text-red-600 font-semibold">Insufficent Balance</p>    }
+                    {balance?.value < selectedNft.price && <p className="mt-4 text-red-600 font-semibold">Insufficent Balance</p>}
                 </Modal.Body>
                 <Modal.Footer>
                     <div className={styles.buyNftFooter}>
                         <div className={styles.buyNftFooterOptions}>
                             {address ?
                                 <Button onClick={handleBuyItem} disabled={!selectedNft.price || selectedNft.price > balance?.value} style={{ minHeight: '36px' }}>{isBuying ? <Loader /> : 'Buy'}</Button>
-                                : <Button><ConnectButton /></Button>}
+                                : <div className={styles.connectButton}><ConnectButton /></div>}
                             <Button onClick={handleIsOpenModal} color="gray">
                                 Cancel
                             </Button>
                         </div>
-                        {address && <p className={styles.currentBalance} >Your current balance: <span className={clsx("font-bold", balance?.value <selectedNft.price && "text-red-600")}>{shortPrice(balance?.formatted)} ETH</span></p>}
+                        {address && <p className={styles.currentBalance} >Your current balance: <span className={clsx("font-bold", balance?.value < selectedNft.price && "text-red-600")}>{shortPrice(balance?.formatted)} ETH</span></p>}
                     </div>
 
                 </Modal.Footer>
