@@ -2,7 +2,7 @@
 
 
 import config from "@/config-wagmi";
-import { approveNftConfig, getApproveConfig, listNftConfig, buyNftConfig } from '@/constants';
+import { approveNftConfig, getApproveConfig, listNftConfig, buyNftConfig, getUpdateConfig } from '@/constants';
 import nftMarketplaceABI from '@/contracts/nftMarketplace.json';
 import { setIsOpenModal, setSelectedNft } from "@/features/modalSlice";
 import { setToast } from "@/features/toastSlice";
@@ -29,6 +29,7 @@ function ModalCustom() {
     const chainId = useChainId()
     const dispatch = useDispatch()
     const [price, setPrice] = useState('')
+    const [newPrice, setNewPrice] =  useState()
     const [isListing, setIsListing] = useState(false)
     const [isBuying, setIsBuying] = useState(false)
     const toastStatus = useSelector(state => state.toastReducer)
@@ -126,9 +127,45 @@ function ModalCustom() {
             setIsBuying(false)
             dispatch(setIsOpenModal({
                 isActive: false,
-                type : ''
+                type: ''
             }))
         } catch (err) {
+            dispatch(setToast({
+                type: 'error',
+                message: getErrorMessageFromSolidity(err.message),
+                isActive: true
+            }))
+            setIsBuying(false)
+        }
+    }
+
+    const handleUpdateItem = async () => {
+        setIsBuying(true)
+        console.log({...getUpdateConfig(selectedNft.address, selectedNft.tokenId, parsePriceToEther(newPrice))})
+        try {
+            const txn = await writeContractAsync({
+                ...getUpdateConfig(selectedNft.address, selectedNft.tokenId, parsePriceToEther(newPrice)),
+            })
+
+            await waitForTransactionReceipt(config, {
+                hash: txn,
+                confirmations: 1,
+                chainId,
+            })
+
+            dispatch(setToast({
+                type: 'success',
+                message: <p>Update successfully with hash <a href={scanExplorerUrl(chainId, txn)}>{shortTxnHash(txn)}</a></p>,
+                isActive: true
+            }))
+            setIsBuying(false)
+            window.location.reload();
+            dispatch(setIsOpenModal({
+                isActive: false,
+                type: ''
+            }))
+        } catch (err) {
+            console.log(err)
             dispatch(setToast({
                 type: 'error',
                 message: getErrorMessageFromSolidity(err.message),
@@ -141,7 +178,7 @@ function ModalCustom() {
     // JSX
     return (
         <div >
-                 <Toast />   
+            <Toast />
             <Modal className={styles.modalContainer} show={isOpenModal && type === 'list'}>
                 <Modal.Body>
                     <h3 className="text-center font-bold text-3xl my-3">Sell NFT</h3>
@@ -206,6 +243,51 @@ function ModalCustom() {
 
                 </Modal.Footer>
             </Modal>
+
+            <Modal className={styles.modalContainer} show={isOpenModal && type === 'update'}>
+                <Modal.Body>
+                    <h3 className="text-center font-bold text-3xl my-3">Update Price</h3>
+                    <div className={styles.buyNftContainer}>
+                        <div className={styles.buyNftInfo}>
+                            <div className={styles.buyNftInfoItem}>
+                                <p>NFTs Name</p>
+                                <input placeholder={`${selectedNft.metaData?.name} #${selectedNft.tokenId}`} disabled />
+                            </div>
+                            <div className={styles.buyNftInfoItem}>
+                                <p>NFTs Address</p>
+                                <input placeholder={selectedNft.address} disabled />
+                            </div>
+                            <div className={styles.buyNftInfoItem}>
+                                <p>NFTs New Price</p>
+                                <div className={styles.priceInput}>
+                                     <input type="number" placeholder={selectedNft.priceFormat} value={newPrice} onChange={(e) => setNewPrice(e.target.value)} />
+                                     <p>BNB</p>
+                                </div>
+                               
+                            </div>
+                        </div>
+                        <div className={styles.buyNftImage}>
+                            <Image alt="" src={selectedNft.metaData?.image} width={150} height={150} />
+                            <p className={clsx('text-center')}>{selectedNft.priceFormat} ETH</p>
+                        </div>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <div className={styles.buyNftFooter}>
+                        <div className={styles.buyNftFooterOptions}>
+                            {address ?
+                                <Button onClick={handleUpdateItem} disabled={!newPrice || newPrice <= 0 || newPrice == parseFloat(selectedNft.priceFormat)}  style={{ minHeight: '36px' }}>{isBuying ? <Loader /> : 'Update'}</Button>
+                                : <div className={styles.connectButton}><ConnectButton /></div>}
+                            <Button onClick={handleIsOpenModal} color="gray">
+                                Cancel
+                            </Button>
+                        </div>
+                    </div>
+
+                </Modal.Footer>
+            </Modal>
+
+            
         </div>
     );
 }

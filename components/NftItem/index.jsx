@@ -43,7 +43,7 @@ function NftItem({ nftItems, nftItem, isMintPage, isNormalPage, isListedPage }) 
     }
 
     const handleClickNftItem = () => {
-        if(isListedPage) return
+        if (isListedPage) return
         dispatch(setIsOpenModal({
             isActive: true,
             type: 'list'
@@ -55,18 +55,26 @@ function NftItem({ nftItems, nftItem, isMintPage, isNormalPage, isListedPage }) 
     }
 
     const handleClickBuyButton = () => {
-        dispatch(setIsOpenModal({
-            isActive: true,
-            type: 'buy',
-        }))
+        if (address?.toLowerCase() === nftItem.owner_of) {
+            dispatch(setIsOpenModal({
+                isActive: true,
+                type: 'update',
+            }))
+        } else {
+            dispatch(setIsOpenModal({
+                isActive: true,
+                type: 'buy',
+            }))
+        }
+
 
         dispatch(setSelectedNft({
             address: nftItem.token_address,
             tokenId: nftItem.token_id,
-            metaData : nftItem.normalized_metadata,
-            priceFormat : nftItem.priceFormat,
-            price : nftItem.price,
-            owner : nftItem.owner_of     
+            metaData: nftItem.normalized_metadata,
+            priceFormat: nftItem.priceFormat,
+            price: nftItem.price,
+            owner: nftItem.owner_of
         }))
 
     }
@@ -84,7 +92,7 @@ function NftItem({ nftItems, nftItem, isMintPage, isNormalPage, isListedPage }) 
             <p className={styles.nftDescription}>{isMintPage ? nftItems[nftIndex].description : metaData?.description}</p>
             {nftItem?.price && <p className={styles.nftPrice}>{nftItem?.priceFormat} ETH</p>}
             {nftItem?.price && <div className={clsx(styles.nftOptions, isHover && styles.nftOptionsActive)} onClick={handleClickBuyButton}>
-                <p className={styles.nftOptionsBuynow}>Buy now</p>
+                <p className={styles.nftOptionsBuynow}>{address?.toLowerCase() === nftItem.owner_of ? 'Update' : 'Buy now'}</p>
                 <div className={styles.nftOptionsGap}></div>
                 <p className={styles.nftOptionsPrice}>{nftItem.priceFormat} ETH</p>
             </div>}

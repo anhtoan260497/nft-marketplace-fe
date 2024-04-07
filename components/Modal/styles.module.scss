@@ -27,28 +27,44 @@
 .buyNftContainer {
     @include flex(space-between, center);
     padding : 10px;
+    
 
     .buyNftInfo {
         width: 60%;
         @include flex(flex-start, flex-start, column,20px);
+
         .buyNftInfoItem {
             font-size: 14px;
             font-weight: 600;
             width: 100%;
-
             p {
                 font-weight: 600;
                 margin : 10px 0;
             }
+        }
 
-            input {
-                width: 100%;
-                padding : 10px 5px;
-                background-color: #f4f4f4;
-                border-radius: 10px;
-                text-overflow: ellipsis;
-                
+        input {
+            width: 100%;
+            padding : 10px 5px;
+            background-color: #f4f4f4;
+            border-radius: 10px;
+            text-overflow: ellipsis;
+            border: none;
+            outline :none;
+            
+        }
+    
+
+        .priceInput {
+            position: relative;            
+
+            p {
+                position: absolute;
+                right : 0;
+                top : 3px;
+                right : 5px;
             }
+
         }
     }
 
