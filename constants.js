@@ -38,14 +38,23 @@ export const listNftConfig = {
 }
 
 export const buyNftConfig = {
-    abi : nftMarketplace.abi,
-    address : nftMarketplace.address,
-    functionName : 'buyItem',
-    args : []
+    abi: nftMarketplace.abi,
+    address: nftMarketplace.address,
+    functionName: 'buyItem',
+    args: []
+}
+
+export const getUpdateConfig = (nftAddress, tokenId, newPrice) => {
+    return {
+        abi: nftMarketplace.abi,
+        address: nftMarketplace.address,
+        functionName: 'updateListing',
+        args: [nftAddress, tokenId, newPrice]
+    }
 }
 
 // React Query Keys
 
 export const QUERY_KEY = {
-    GET_LISTED_ITEMS : 'GET_LISTED_ITEMS',
+    GET_LISTED_ITEMS: 'GET_LISTED_ITEMS',
 }
