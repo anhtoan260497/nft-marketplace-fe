@@ -8,6 +8,7 @@ const Toast = () => {
 
     const toastStatus = useSelector((state) => state.toastReducer)
     const dispatch = useDispatch()
+    console.log(toastStatus.type)
 
     useEffect(() => {
         let hidePopup
