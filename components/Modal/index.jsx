@@ -2,7 +2,7 @@
 
 
 import config from "@/config-wagmi";
-import { approveNftConfig, getApproveConfig, listNftConfig, buyNftConfig, getUpdateConfig } from '@/constants';
+import { approveNftConfig, getApproveConfig, listNftConfig, buyNftConfig, getUpdateConfig, getCancelConfig } from '@/constants';
 import nftMarketplaceABI from '@/contracts/nftMarketplace.json';
 import { setIsOpenModal, setSelectedNft } from "@/features/modalSlice";
 import { setToast } from "@/features/toastSlice";
@@ -29,9 +29,10 @@ function ModalCustom() {
     const chainId = useChainId()
     const dispatch = useDispatch()
     const [price, setPrice] = useState('')
-    const [newPrice, setNewPrice] =  useState()
+    const [newPrice, setNewPrice] = useState()
     const [isListing, setIsListing] = useState(false)
     const [isBuying, setIsBuying] = useState(false)
+    const [isCanceling, setIsCanceling] = useState(false)
     const toastStatus = useSelector(state => state.toastReducer)
     const { data: approves } = useReadContract(getApproveConfig(selectedNft.tokenId, chainId))
     const { address } = useAccount()
@@ -141,7 +142,7 @@ function ModalCustom() {
 
     const handleUpdateItem = async () => {
         setIsBuying(true)
-        console.log({...getUpdateConfig(selectedNft.address, selectedNft.tokenId, parsePriceToEther(newPrice))})
+        console.log({ ...getUpdateConfig(selectedNft.address, selectedNft.tokenId, parsePriceToEther(newPrice)) })
         try {
             const txn = await writeContractAsync({
                 ...getUpdateConfig(selectedNft.address, selectedNft.tokenId, parsePriceToEther(newPrice)),
@@ -172,6 +173,39 @@ function ModalCustom() {
                 isActive: true
             }))
             setIsBuying(false)
+        }
+    }
+
+    const handleCancelItem = async () => {
+        setIsCanceling(true)
+        try {
+            const txn = await writeContractAsync({ ...getCancelConfig(selectedNft.address, selectedNft.tokenId) })
+
+            await waitForTransactionReceipt(config, {
+                hash: txn,
+                confirmations: 1,
+                chainId,
+            })
+
+            dispatch(setToast({
+                type: 'success',
+                message: <p>Unlist successfully with hash <a href={scanExplorerUrl(chainId, txn)}>{shortTxnHash(txn)}</a></p>,
+                isActive: true
+            }))
+            setIsCanceling(false)
+            window.location.reload();
+            dispatch(setIsOpenModal({
+                isActive: false,
+                type: ''
+            }))
+        } catch (err) {
+            console.log(err)
+            dispatch(setToast({
+                type: 'error',
+                message: getErrorMessageFromSolidity(err.message),
+                isActive: true
+            }))
+            setIsCanceling(false)
         }
     }
 
@@ -260,10 +294,10 @@ function ModalCustom() {
                             <div className={styles.buyNftInfoItem}>
                                 <p>NFTs New Price</p>
                                 <div className={styles.priceInput}>
-                                     <input type="number" placeholder={selectedNft.priceFormat} value={newPrice} onChange={(e) => setNewPrice(e.target.value)} />
-                                     <p>BNB</p>
+                                    <input type="number" placeholder={selectedNft.priceFormat} value={newPrice} onChange={(e) => setNewPrice(e.target.value)} />
+                                    <p>BNB</p>
                                 </div>
-                               
+
                             </div>
                         </div>
                         <div className={styles.buyNftImage}>
@@ -276,18 +310,54 @@ function ModalCustom() {
                     <div className={styles.buyNftFooter}>
                         <div className={styles.buyNftFooterOptions}>
                             {address ?
-                                <Button onClick={handleUpdateItem} disabled={!newPrice || newPrice <= 0 || newPrice == parseFloat(selectedNft.priceFormat)}  style={{ minHeight: '36px' }}>{isBuying ? <Loader /> : 'Update'}</Button>
+                                <Button onClick={handleUpdateItem} disabled={!newPrice || newPrice <= 0 || newPrice == parseFloat(selectedNft.priceFormat)} style={{ minHeight: '36px' }}>{isBuying ? <Loader /> : 'Update'}</Button>
                                 : <div className={styles.connectButton}><ConnectButton /></div>}
                             <Button onClick={handleIsOpenModal} color="gray">
                                 Cancel
                             </Button>
                         </div>
                     </div>
-
                 </Modal.Footer>
             </Modal>
 
-            
+            <Modal className={styles.modalContainer} show={isOpenModal && type === 'cancel'}>
+                <Modal.Body>
+
+                    <h3 className="text-center font-bold text-3xl my-3">Update Price</h3>
+                    <div className={styles.buyNftContainer}>
+                        <div className={styles.buyNftInfo}>
+                            <div className={styles.buyNftInfoItem}>
+                                <p>NFTs Name</p>
+                                <input placeholder={`${selectedNft.metaData?.name} #${selectedNft.tokenId}`} disabled />
+                            </div>
+                            <div className={styles.buyNftInfoItem}>
+                                <p>NFTs Address</p>
+                                <input placeholder={selectedNft.address} disabled />
+                            </div>
+                        </div>
+                        <div className={styles.buyNftImage}>
+                            <Image alt="" src={selectedNft.metaData?.image} width={150} height={150} />
+                            <p className={clsx('text-center')}>{selectedNft.priceFormat} ETH</p>
+                        </div>
+                    </div>
+
+                    <div className="text-center">
+                        <h3 className="mb-2 text-lg font-normal text-gray-500 dark:text-gray-400">
+                            Are you sure you want to unlisiting this NFT?
+                        </h3>
+                        <div className="flex justify-center gap-4">
+                        {address ?
+                                <Button color='failure' onClick={handleCancelItem} style={{ minHeight: '36px' }}>{isCanceling ? <Loader /> : 'Yes, unlist NFT'}</Button>
+                                : <div className={styles.connectButton}><ConnectButton /></div>}
+                            <Button onClick={handleIsOpenModal} color="gray">
+                                Cancel
+                            </Button>
+                        </div>
+                    </div>
+                </Modal.Body>
+            </Modal>
+
+
         </div>
     );
 }

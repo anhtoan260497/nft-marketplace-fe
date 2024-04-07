@@ -19,6 +19,7 @@ const HomePage = ({ listedItems }) => {
     return (
         <div className="wrapped-body">
             <div className="padding-top-64"></div>
+            <h1 className="text-center font-bold text-2xl mt-5">Recently Listed</h1>
             <div className=" w-full p-5 flex justify-center flex-wrap gap-8">
                 {renderNftList()}
             </div>

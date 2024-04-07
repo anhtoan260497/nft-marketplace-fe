@@ -76,7 +76,22 @@ function NftItem({ nftItems, nftItem, isMintPage, isNormalPage, isListedPage }) 
             price: nftItem.price,
             owner: nftItem.owner_of
         }))
+    }
 
+    const handleCancelItem = () => {
+        dispatch(setIsOpenModal({
+            isActive: true,
+            type: 'cancel',
+        }))
+
+        dispatch(setSelectedNft({
+            address: nftItem.token_address,
+            tokenId: nftItem.token_id,
+            metaData: nftItem.normalized_metadata,
+            priceFormat: nftItem.priceFormat,
+            price: nftItem.price,
+            owner: nftItem.owner_of
+        }))
     }
 
     return (
@@ -91,11 +106,13 @@ function NftItem({ nftItems, nftItem, isMintPage, isNormalPage, isListedPage }) 
             <Image className={styles.nftImage} src={isMintPage ? nftItems[nftIndex].image : metaData?.image} width={200} height={200} alt="Doge" priority />
             <p className={styles.nftDescription}>{isMintPage ? nftItems[nftIndex].description : metaData?.description}</p>
             {nftItem?.price && <p className={styles.nftPrice}>{nftItem?.priceFormat} ETH</p>}
-            {nftItem?.price && <div className={clsx(styles.nftOptions, isHover && styles.nftOptionsActive)} onClick={handleClickBuyButton}>
-                <p className={styles.nftOptionsBuynow}>{address?.toLowerCase() === nftItem.owner_of ? 'Update' : 'Buy now'}</p>
-                <div className={styles.nftOptionsGap}></div>
-                <p className={styles.nftOptionsPrice}>{nftItem.priceFormat} ETH</p>
-            </div>}
+            {nftItem?.price &&
+                <div className={clsx(styles.nftOptions, isHover && styles.nftOptionsActive)}>
+                    <p onClick={handleClickBuyButton} className={styles.nftOptionsBuynow}>{address?.toLowerCase() === nftItem.owner_of ? 'Update' : 'Buy now'}{nftItem?.price && address?.toLowerCase() === nftItem.owner_of && <span className={styles.nftOptionsPriceMobile}> | {nftItem?.priceFormat} ETH</span>}</p>
+                    <div className={styles.nftOptionsGap}></div>
+                    {address?.toLowerCase() === nftItem.owner_of ? <p className={clsx(styles.nftOptionsPrice, styles.nftoptionsCancel, 'bg-red-500')} onClick={handleCancelItem}>Cancel</p> : <p className={styles.nftOptionsPrice}>{nftItem.priceFormat} ETH</p>}
+                </div>
+            }
         </div>
     );
 }
