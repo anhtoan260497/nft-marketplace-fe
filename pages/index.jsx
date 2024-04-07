@@ -3,6 +3,7 @@ import NftItem from "@/components/NftItem"
 import { convertMetaData } from "@/helper"
 import useMoralisStart from "@/hooks/useMoralisStart"
 import useNftInfo from "@/hooks/useNftInfo"
+import { Toast } from "flowbite-react"
 import { useState } from "react"
 
 

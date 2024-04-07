@@ -9,6 +9,7 @@ const toastSlice = createSlice({
     },
     reducers : {
         setToast : (state, {payload}) => {
+            console.log(payload)
             state.isActive = payload.isActive
             state.message  =  payload.message
             state.type =  payload.type

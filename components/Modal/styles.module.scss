@@ -92,4 +92,27 @@
     .modalContainer {
         margin-top: 60px;
     }
+
+    .buyNftContainer {
+    
+        .buyNftInfo {
+            @include flex(flex-start, flex-start, column, 5px);
+        }
+    
+        .buyNftImage {
+    
+            img {
+                height: 100px !important;
+            }
+        }
+    }
+
+    .buyNftFooter {
+        gap : 20px;
+
+    
+        .currentBalance {
+            font-size: 12px;
+        }
+    }
 }

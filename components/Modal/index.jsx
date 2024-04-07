@@ -17,6 +17,7 @@ import styles from './styles.module.scss';
 import Image from "next/image";
 import clsx from "clsx";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import Toast from "../Toast";
 
 function ModalCustom() {
 
@@ -104,42 +105,49 @@ function ModalCustom() {
     }
 
     const handleBuyItem = async () => {
-        setIsBuying(true)
-        try {
-            const txn = await writeContractAsync({
-                ...buyNftConfig,
-                args: [selectedNft.address, selectedNft.tokenId],
-                value: selectedNft.price
-            })
+        dispatch(setToast({
+            type: 'success',
+            // message: <p>Bought successfully with hash <a href={scanExplorerUrl(chainId, txn)}>{shortTxnHash(txn)}</a></p>,
+            message: [<p key={1}>dasdasd</p>],
+            isActive: true
+        }))
+        // setIsBuying(true)
+        // try {
+        //     const txn = await writeContractAsync({
+        //         ...buyNftConfig,
+        //         args: [selectedNft.address, selectedNft.tokenId],
+        //         value: selectedNft.price
+        //     })
 
-            await waitForTransactionReceipt(config, {
-                hash: txn,
-                confirmations: 1,
-                chainId,
-            })
-            dispatch(setToast({
-                type: 'success',
-                message: <p>Bought successfully with hash <a href={scanExplorerUrl(chainId, txn)}>{shortTxnHash(txn)}</a></p>,
-                isActive: true
-            }))
-            setIsBuying(false)
-            dispatch(setIsOpenModal({
-                isActive: false,
-                type : ''
-            }))
-        } catch (err) {
-            dispatch(setToast({
-                type: 'error',
-                message: getErrorMessageFromSolidity(err.message),
-                isActive: true
-            }))
-            setIsBuying(false)
-        }
+        //     await waitForTransactionReceipt(config, {
+        //         hash: txn,
+        //         confirmations: 1,
+        //         chainId,
+        //     })
+        //     dispatch(setToast({
+        //         type: 'success',
+        //         message: <p>Bought successfully with hash <a href={scanExplorerUrl(chainId, txn)}>{shortTxnHash(txn)}</a></p>,
+        //         isActive: true
+        //     }))
+        //     setIsBuying(false)
+        //     dispatch(setIsOpenModal({
+        //         isActive: false,
+        //         type : ''
+        //     }))
+        // } catch (err) {
+        //     dispatch(setToast({
+        //         type: 'error',
+        //         message: getErrorMessageFromSolidity(err.message),
+        //         isActive: true
+        //     }))
+        //     setIsBuying(false)
+        // }
     }
 
     // JSX
     return (
         <div >
+                 <Toast />   
             <Modal className={styles.modalContainer} show={isOpenModal && type === 'list'}>
                 <Modal.Body>
                     <h3 className="text-center font-bold text-3xl my-3">Sell NFT</h3>
