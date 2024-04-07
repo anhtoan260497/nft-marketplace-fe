@@ -5,7 +5,7 @@
     height: 300px;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
     border-radius: 10px;
-    padding : 10px;
+    padding: 10px;
     background-color: transparent;
     position: relative;
     overflow: hidden;
@@ -13,7 +13,7 @@
 
     @include flex(center, center, column, 10px);
 
-    img { 
+    img {
         object-fit: contain;
     }
 
@@ -48,40 +48,53 @@
 
     .nftOptions {
         position: absolute;
-        bottom : -100px;
+        bottom: -100px;
         width: 100%;
         font-weight: 600;
         background-color: #2081E2;
-        color : white;
+        color: white;
         text-align: center;
         display: flex;
         justify-content: space-between;
         transition: bottom .5s ease;
 
-        .nftOptionsBuynow{
+        .nftOptionsBuynow {
             width: 70%;
-            padding : 5px;
+            padding: 5px;
+
+
+            .nftOptionsPriceMobile {
+                display: none;
+            }
+
             &:hover {
                 background-color: #1c78d3;
             }
         }
 
-        .nftOptionsGap{
+        .nftOptionsGap {
             width: 0.5px;
             background-color: white;
         }
 
         .nftOptionsPrice {
             width: 30%;
-            padding : 5px;
+            padding: 5px;
+
             &:hover {
                 background-color: #1c78d3;
+            }
+        }
+
+        .nftoptionsCancel {
+            &:hover {
+                background-color: rgb(220 38 38);
             }
         }
     }
 
     .nftOptionsActive {
-        bottom : 0px;
+        bottom: 0px;
         transition: bottom .5s ease;
     }
 }
@@ -91,26 +104,48 @@
     .responsiveNormalPage {
         width: 150px;
         height: 150px;
-        padding : 10px;
-    
+        padding: 10px;
+
         @include flex(center, center, column, 2px);
-    
+
         .nftName {
             font-size: 12px;
         }
-    
+
         .nftDescription {
             font-size: 10px;
         }
-    
+
         .nftHeadInfo {
             font-size: 10px;
         }
 
-        img { 
+        img {
             object-fit: contain;
         }
     }
-    
-    
+
+
+    .nftItemContainer {
+        .nftOptions {
+            bottom: 0;
+            font-size: 10px;
+            
+
+            .nftOptionsBuynow {
+                width: 65%;
+                .nftOptionsPriceMobile {
+                    display: inline;
+                }
+            }
+
+            .nftOptionsPrice {
+                width: 35%;
+            }
+        }
+
+        .nftPrice {
+            opacity: 0;
+        }
+    }
 }

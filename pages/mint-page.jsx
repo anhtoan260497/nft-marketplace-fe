@@ -33,7 +33,7 @@ const MintPage = () => {
                 {
                     address && isClient ?
                         <div className="mt-6 w-full">
-                            <p className="text-center font-bold text-3xl my-6">Mint NFT</p>
+                            <p className="text-center font-bold text-2xl my-6">Mint NFT</p>
                             <div className="w-full flex flex-col items-center">
                                 <NftItem nftItems={nftData} isMintPage />
                                 <Button address={address} />

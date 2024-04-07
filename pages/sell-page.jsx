@@ -39,7 +39,7 @@ const SellPage = () => {
     return <div className="wrapped-body">
         <div className="padding-top-64"></div>
         <Toast />
-        <p className="text-center font-bold text-3xl my-8">Your NFTs</p>
+        <p className="text-center font-bold text-2xl my-8">Your NFTs</p>
         {address && isClient ? <div className='p-5 flex justify-center flex-wrap gap-8'>
             {renderNftList()}
             <ModalCustom />
