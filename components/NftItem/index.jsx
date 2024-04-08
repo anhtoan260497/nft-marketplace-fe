@@ -1,11 +1,11 @@
 import { setIsOpenModal, setSelectedNft } from '@/features/modalSlice';
-import { convertMetaData, shortTxnHash } from '@/helper';
+import { chainNativeTokenSymbol, convertMetaData, shortTxnHash } from '@/helper';
 import useRenderClient from '@/hooks/useRenderClient';
 import clsx from 'clsx';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useAccount } from 'wagmi';
+import { useAccount, useChainId } from 'wagmi';
 import styles from './styles.module.scss';
 
 
@@ -17,6 +17,8 @@ function NftItem({ nftItems, nftItem, isMintPage, isNormalPage, isListedPage }) 
     const isClient = useRenderClient()
     const dispatch = useDispatch()
     const [isHover, setIsHover] = useState(false)
+    const chainId =  useChainId()
+    console.log(chainId)
 
     useEffect(() => {
         if (!isMintPage) return
@@ -110,7 +112,7 @@ function NftItem({ nftItems, nftItem, isMintPage, isNormalPage, isListedPage }) 
                 <div className={clsx(styles.nftOptions, isHover && styles.nftOptionsActive)}>
                     <p onClick={handleClickBuyButton} className={styles.nftOptionsBuynow}>{address?.toLowerCase() === nftItem.owner_of ? 'Update' : 'Buy now'}{nftItem?.price && address?.toLowerCase() === nftItem.owner_of && <span className={styles.nftOptionsPriceMobile}> | {nftItem?.priceFormat} ETH</span>}</p>
                     <div className={styles.nftOptionsGap}></div>
-                    {address?.toLowerCase() === nftItem.owner_of ? <p className={clsx(styles.nftOptionsPrice, styles.nftoptionsCancel, 'bg-red-500')} onClick={handleCancelItem}>Cancel</p> : <p className={styles.nftOptionsPrice}>{nftItem.priceFormat} ETH</p>}
+                    {address?.toLowerCase() === nftItem.owner_of ? <p className={clsx(styles.nftOptionsPrice, styles.nftoptionsCancel, 'bg-red-500')} onClick={handleCancelItem}>Cancel</p> : <p className={styles.nftOptionsPrice}>{nftItem.priceFormat} {chainNativeTokenSymbol(chainId)}</p>}
                 </div>
             }
         </div>

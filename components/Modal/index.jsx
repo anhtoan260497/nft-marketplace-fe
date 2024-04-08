@@ -2,22 +2,23 @@
 
 
 import config from "@/config-wagmi";
-import { approveNftConfig, getApproveConfig, listNftConfig, buyNftConfig, getUpdateConfig, getCancelConfig } from '@/constants';
+import { approveNftConfig, buyNftConfig, getApproveConfig, getCancelConfig, getProceedsConfig, getUpdateConfig, listNftConfig, widthdrawProceeedsConfig } from '@/constants';
 import nftMarketplaceABI from '@/contracts/nftMarketplace.json';
 import { setIsOpenModal, setSelectedNft } from "@/features/modalSlice";
 import { setToast } from "@/features/toastSlice";
-import { getErrorMessageFromSolidity, parsePriceToEther, scanExplorerUrl, shortPrice, shortTxnHash } from "@/helper";
+import { chainNativeTokenSymbol, getErrorMessageFromSolidity, parsePriceToEther, scanExplorerUrl, shortPrice, shortTxnHash } from "@/helper";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { waitForTransactionReceipt } from "@wagmi/core";
+import clsx from "clsx";
 import { Button, Modal } from "flowbite-react";
+import Image from "next/image";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { formatEther } from "viem";
 import { useAccount, useBalance, useChainId, useReadContract, useWriteContract } from "wagmi";
 import Loader from "../Loader";
-import styles from './styles.module.scss';
-import Image from "next/image";
-import clsx from "clsx";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Toast from "../Toast";
+import styles from './styles.module.scss';
 
 function ModalCustom() {
 
@@ -33,10 +34,16 @@ function ModalCustom() {
     const [isListing, setIsListing] = useState(false)
     const [isBuying, setIsBuying] = useState(false)
     const [isCanceling, setIsCanceling] = useState(false)
+    const [widthdrawing, setWidthdrawing] = useState(false)
     const toastStatus = useSelector(state => state.toastReducer)
     const { data: approves } = useReadContract(getApproveConfig(selectedNft.tokenId, chainId))
     const { address } = useAccount()
     const { data: balance } = useBalance({ address })
+    const { data: proceeds } = useReadContract({
+        ...getProceedsConfig(address)
+    })
+
+
 
     // methods
     const handleIsOpenModal = () => {
@@ -180,7 +187,6 @@ function ModalCustom() {
         setIsCanceling(true)
         try {
             const txn = await writeContractAsync({ ...getCancelConfig(selectedNft.address, selectedNft.tokenId) })
-
             await waitForTransactionReceipt(config, {
                 hash: txn,
                 confirmations: 1,
@@ -206,6 +212,31 @@ function ModalCustom() {
                 isActive: true
             }))
             setIsCanceling(false)
+        }
+    }
+
+    const handleWidthdraw = async () => {
+        try {
+            setWidthdrawing(true)
+            const txn = await writeContractAsync({ ...widthdrawProceeedsConfig() })
+            await waitForTransactionReceipt(config, {
+                hash: txn,
+                confirmations: 1,
+                chainId,
+            })
+
+            dispatch(setToast({
+                type: 'success',
+                message: <p>Widthdraw successfully with hash <a href={scanExplorerUrl(chainId, txn)}>{shortTxnHash(txn)}</a></p>,
+                isActive: true
+            }))
+            setWidthdrawing(false)
+            dispatch(setIsOpenModal({
+                isActive: false,
+                type: ''
+            }))
+        } catch (err) {
+
         }
     }
 
@@ -257,7 +288,7 @@ function ModalCustom() {
                         </div>
                         <div className={styles.buyNftImage}>
                             <Image alt="" src={selectedNft.metaData?.image} width={150} height={150} />
-                            <p className={clsx('text-center')}>{selectedNft.priceFormat} ETH</p>
+                            <p className={clsx('text-center')}>{selectedNft.priceFormat} {chainNativeTokenSymbol(chainId)}</p>
                         </div>
                     </div>
                     {balance?.value < selectedNft.price && <p className="mt-4 text-red-600 font-semibold">Insufficent Balance</p>}
@@ -272,7 +303,7 @@ function ModalCustom() {
                                 Cancel
                             </Button>
                         </div>
-                        {address && <p className={styles.currentBalance} >Your current balance: <span className={clsx("font-bold", balance?.value < selectedNft.price && "text-red-600")}>{shortPrice(balance?.formatted)} ETH</span></p>}
+                        {address && <p className={styles.currentBalance} >Your current balance: <span className={clsx("font-bold", balance?.value < selectedNft.price && "text-red-600")}>{shortPrice(balance?.formatted)} {chainNativeTokenSymbol(chainId)}</span></p>}
                     </div>
 
                 </Modal.Footer>
@@ -295,14 +326,14 @@ function ModalCustom() {
                                 <p>NFTs New Price</p>
                                 <div className={styles.priceInput}>
                                     <input type="number" placeholder={selectedNft.priceFormat} value={newPrice} onChange={(e) => setNewPrice(e.target.value)} />
-                                    <p>BNB</p>
+                                    <p>{chainNativeTokenSymbol(chainId)}</p>
                                 </div>
 
                             </div>
                         </div>
                         <div className={styles.buyNftImage}>
                             <Image alt="" src={selectedNft.metaData?.image} width={150} height={150} />
-                            <p className={clsx('text-center')}>{selectedNft.priceFormat} ETH</p>
+                            <p className={clsx('text-center')}>{selectedNft.priceFormat} {chainNativeTokenSymbol(chainId)}</p>
                         </div>
                     </div>
                 </Modal.Body>
@@ -337,7 +368,7 @@ function ModalCustom() {
                         </div>
                         <div className={styles.buyNftImage}>
                             <Image alt="" src={selectedNft.metaData?.image} width={150} height={150} />
-                            <p className={clsx('text-center')}>{selectedNft.priceFormat} ETH</p>
+                            <p className={clsx('text-center')}>{selectedNft.priceFormat} {chainNativeTokenSymbol(chainId)}</p>
                         </div>
                     </div>
 
@@ -346,7 +377,7 @@ function ModalCustom() {
                             Are you sure you want to unlisiting this NFT?
                         </h3>
                         <div className="flex justify-center gap-4">
-                        {address ?
+                            {address ?
                                 <Button color='failure' onClick={handleCancelItem} style={{ minHeight: '36px' }}>{isCanceling ? <Loader /> : 'Yes, unlist NFT'}</Button>
                                 : <div className={styles.connectButton}><ConnectButton /></div>}
                             <Button onClick={handleIsOpenModal} color="gray">
@@ -358,6 +389,35 @@ function ModalCustom() {
             </Modal>
 
 
+            <Modal className={styles.modalContainer} show={isOpenModal && type === 'widthdraw'}>
+                <Modal.Body>
+
+                    <h3 className="text-center font-bold text-3xl my-3">Widthdraw</h3>
+                    <div className={styles.buyNftContainer}>
+                        <div className={styles.widthdrawInfo}>
+                            <div className={styles.buyNftInfoItem}>
+                                <p>Your address</p>
+                                <input placeholder={`${address}`} disabled />
+                            </div>
+                            <div className={styles.buyNftInfoItem}>
+                                <p>Your balance</p>
+                                <input placeholder={proceeds ? formatEther(proceeds) : 0} disabled />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="text-center">
+                        <div className="flex justify-center gap-4">
+                            {address ?
+                                <Button className="bg-green-600 font-bold" onClick={handleWidthdraw} disabled={!proceeds || proceeds <= 0} style={{ minHeight: '36px' }}>{widthdrawing ? <Loader /> : 'Widthdraw'}</Button>
+                                : <div className={styles.connectButton}><ConnectButton /></div>}
+                            <Button onClick={handleIsOpenModal} color="gray">
+                                Cancel
+                            </Button>
+                        </div>
+                    </div>
+                </Modal.Body>
+            </Modal>
         </div>
     );
 }

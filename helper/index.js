@@ -27,3 +27,8 @@ export const parsePriceToEther = (price) => {
 export const scanExplorerUrl = (chainId, hash) => {
     if(chainId === 11155111) return `https://sepolia.etherscan.io/tx/${hash}`
 }
+
+export const chainNativeTokenSymbol = (chainId) => {
+    if(chainId === 11155111) return 'ETH'
+    if(chainId === 97) return 'BNB'
+}
