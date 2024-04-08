@@ -62,6 +62,24 @@ export const getCancelConfig = (nftAddress, tokenId) => {
     }
 }
 
+export const getProceedsConfig = (address) => {
+    return {
+        abi: nftMarketplace.abi,
+        address: nftMarketplace.address,
+        functionName: 'getProceeds',
+        args: [address]
+    }
+}
+
+export const widthdrawProceeedsConfig = () => {
+    return {
+        abi: nftMarketplace.abi,
+        address: nftMarketplace.address,
+        functionName: 'widthdrawProceeeds',
+        args: []
+    }
+}
+
 // React Query Keys
 
 export const QUERY_KEY = {

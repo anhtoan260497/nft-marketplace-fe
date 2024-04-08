@@ -19,8 +19,8 @@ const Header = () => {
                 <div className={styles.headerNavContainer}>
                     <div className={styles.headerNav}>
                         <Link href='/' >Home</Link>
-                        <Link href='/sell-page' >Sell NFT</Link>
-                        <Link href='/mint-page'>Mint Doge NFT</Link>
+                        <Link href='/mint-page'>Mint Doge NFT</Link>  
+                        <Link href='/your-profile' >Your Profile</Link>
                     </div>
                 </div>
                 <ConnectButton />
@@ -42,8 +42,8 @@ const Header = () => {
                         }} />
                     <div className={styles.headerNav}>
                         <Link href='/' >Home</Link>
-                        <Link href='/sell-page' >Sell NFT</Link>
-                        <Link href='/mint-page'>Mint Doge NFT</Link>
+                        <Link href='/mint-page'>Mint Doge NFT</Link>  
+                        <Link href='/your-profile' >Your Profile</Link>
                     </div>
                 </div>
             </nav>

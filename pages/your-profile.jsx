@@ -1,11 +1,13 @@
 import ModalCustom from "@/components/Modal";
 import NftItem from "@/components/NftItem";
 import Toast from "@/components/Toast";
+import { setIsOpenModal } from "@/features/modalSlice";
 import useMoralisStart from "@/hooks/useMoralisStart";
 import useRenderClient from "@/hooks/useRenderClient";
+import { Button } from "flowbite-react";
 import Moralis from "moralis";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useAccount, useChainId } from "wagmi";
 
 const SellPage = () => {
@@ -15,6 +17,7 @@ const SellPage = () => {
     const chainId = useChainId()
     const { address } = useAccount()
     const isClient = useRenderClient()
+    const dispatch = useDispatch()
 
     useEffect(() => {
         const getNfts = async () => {
@@ -35,11 +38,21 @@ const SellPage = () => {
         return nfts.map(item => <NftItem isNormalPage nftItem={item} key={item.token_id} />)
     }
 
+    const widthDrawMoney = () => {
+        dispatch(setIsOpenModal({
+            isActive: true,
+            type: 'widthdraw',
+        }))
+    }
+
 
     return <div className="wrapped-body">
         <div className="padding-top-64"></div>
         <Toast />
-        <p className="text-center font-bold text-2xl my-8">Your NFTs</p>
+        <div className="my-8 flex w-full">
+            <p className="text-center font-bold text-2xl w-11/12">Your Nfts</p>
+            <Button className="bg-green-600 font-bold w-auto" onClick={widthDrawMoney}>Widthdraw</Button>
+        </div>
         {address && isClient ? <div className='p-5 flex justify-center flex-wrap gap-8'>
             {renderNftList()}
             <ModalCustom />

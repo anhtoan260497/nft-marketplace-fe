@@ -1,21 +1,20 @@
-import Header from "@/components/Header"
-import Head from "next/head"
-import '@rainbow-me/rainbowkit/styles.css';
-import "../app/globals.scss";
+import Header from "@/components/Header";
 import config from "@/config-wagmi";
+import '@rainbow-me/rainbowkit/styles.css';
+import Head from "next/head";
+import "../app/globals.scss";
 
 
+import { store } from "@/app/store/store";
 import {
     RainbowKitProvider,
 } from '@rainbow-me/rainbowkit';
-import { WagmiProvider } from 'wagmi';
 import {
-    QueryClientProvider,
     QueryClient,
+    QueryClientProvider,
 } from "@tanstack/react-query";
-import useMoralisStart from "@/hooks/useMoralisStart";
 import { Provider } from "react-redux";
-import { store } from "@/app/store/store";
+import { WagmiProvider } from 'wagmi';
 
 
 const queryClient = new QueryClient();

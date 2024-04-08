@@ -2,20 +2,15 @@
 
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
 import {
-    mainnet,
-    polygon,
-    optimism,
-    arbitrum,
-    base,
-    sepolia
+    sepolia, bscTestnet
 } from 'wagmi/chains';
 
 
 const config = getDefaultConfig({
-    appName: 'My RainbowKit App',
-    projectId: 'YOUR_PROJECT_ID',
-    chains: [mainnet, polygon, optimism, arbitrum, base,sepolia],
-    ssr: false,  // If your dApp uses server side rendering (SSR)
+    appName: 'NFT Marketplace',
+    projectId: '1011',
+    chains: [sepolia, bscTestnet],
+    ssr: true,  // If your dApp uses server side rendering (SSR)
 });
 
 export default config

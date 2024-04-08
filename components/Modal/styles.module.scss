@@ -29,7 +29,7 @@
     padding : 10px;
     
 
-    .buyNftInfo {
+    .buyNftInfo, .widthdrawInfo {
         width: 60%;
         @include flex(flex-start, flex-start, column,20px);
 
@@ -68,6 +68,10 @@
         }
     }
 
+    .widthdrawInfo {
+        width: 100%;
+    }
+
     .buyNftImage {
         width : 40%;
         font-weight: 700;
@@ -80,8 +84,6 @@
         }
     }
 }
-
-
 
 .buyNftFooter {
     @include flex(space-between, center);
