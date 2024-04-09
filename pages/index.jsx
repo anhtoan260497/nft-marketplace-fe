@@ -31,7 +31,7 @@ const HomePage = ({ listedItems }) => {
 
 export const getStaticProps = async () => {
 
-    const items = await (await fetch('https://cosmic-brightly-lobster.ngrok-free.app/nft/list-item/0xaa36a7')).json()
+    const items = await (await fetch('https://nft-marketplace-be-lycn.onrender.com/nft/list-item/0xaa36a7')).json()
 
     return {
         props: {
