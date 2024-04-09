@@ -354,7 +354,7 @@ function ModalCustom() {
             <Modal className={styles.modalContainer} show={isOpenModal && type === 'cancel'}>
                 <Modal.Body>
 
-                    <h3 className="text-center font-bold text-3xl my-3">Update Price</h3>
+                    <h3 className="text-center font-bold text-3xl my-3">Unlisting NFT</h3>
                     <div className={styles.buyNftContainer}>
                         <div className={styles.buyNftInfo}>
                             <div className={styles.buyNftInfoItem}>
@@ -391,7 +391,6 @@ function ModalCustom() {
 
             <Modal className={styles.modalContainer} show={isOpenModal && type === 'widthdraw'}>
                 <Modal.Body>
-
                     <h3 className="text-center font-bold text-3xl my-3">Widthdraw</h3>
                     <div className={styles.buyNftContainer}>
                         <div className={styles.widthdrawInfo}>
