@@ -1,6 +1,6 @@
 # NFT Marketplace with Solidity and Hardhat
 
-[Production Page] (https://nft-marketplace-fe-xi.vercel.app/)
+[Production Page](https://nft-marketplace-fe-xi.vercel.app/)
 
 ***This product needs Metamask to interact with ethersJS and web3***
 
